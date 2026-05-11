@@ -4,40 +4,61 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from PIL import Image, ImageDraw, ImageFont
 
+from .constants import (
+    AVATAR_COLORS,
+    AVATAR_FONT_PATHS,
+    AVATAR_FONT_SIZE,
+    AVATAR_SIZE,
+    AVATAR_TEXT_COLOR,
+    TEXT_BBOX_ANCHOR,
+)
 
-AVATAR_COLORS = [
-    "#A8DADC",
-    "#BDE0FE",
-    "#CCD5AE",
-    "#DDBEA9",
-    "#CDB4DB",
-]
 
-TEXT_COLOR = "#2B2D42"
+def get_avatar_font():
+    for font_path in AVATAR_FONT_PATHS:
+        try:
+            return ImageFont.truetype(
+                font_path,
+                AVATAR_FONT_SIZE,
+            )
+        except OSError:
+            continue
+
+    return ImageFont.load_default()
 
 
 def generate_avatar(user):
-    image = Image.new("RGB", (200, 200), random.choice(AVATAR_COLORS))
+    image = Image.new(
+        "RGB",
+        AVATAR_SIZE,
+        random.choice(AVATAR_COLORS),
+    )
     draw = ImageDraw.Draw(image)
 
     letter = (user.name or "U")[0].upper()
+    font = get_avatar_font()
 
-    try:
-        font = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-            90
-        )
-    except OSError:
-        font = ImageFont.load_default()
+    bbox = draw.textbbox(
+        TEXT_BBOX_ANCHOR,
+        letter,
+        font=font,
+    )
 
-    bbox = draw.textbbox((0, 0), letter, font=font)
-    x = (200 - (bbox[2] - bbox[0])) / 2
-    y = (200 - (bbox[3] - bbox[1])) / 2
+    x = (AVATAR_SIZE[0] - (bbox[2] - bbox[0])) / 2
+    y = (AVATAR_SIZE[1] - (bbox[3] - bbox[1])) / 2
 
-    draw.text((x, y), letter, fill=TEXT_COLOR, font=font)
+    draw.text(
+        (x, y),
+        letter,
+        fill=AVATAR_TEXT_COLOR,
+        font=font,
+    )
 
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     buffer.seek(0)
 
-    return ContentFile(buffer.read(), name=f"{user.email}_avatar.png")
+    return ContentFile(
+        buffer.read(),
+        name=f"{user.email}_avatar.png",
+    )

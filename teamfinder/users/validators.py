@@ -1,11 +1,12 @@
 import re
+
 from django.core.exceptions import ValidationError
 
 from .constants import (
     GIT_HOST,
     INVALID_GIT_URL_MESSAGE,
-    PHONE_REGEX,
     INVALID_PHONE_MESSAGE,
+    PHONE_REGEX,
 )
 
 

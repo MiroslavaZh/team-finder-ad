@@ -9,7 +9,6 @@ urlpatterns = [
     path("list/", views.project_list),
     path("favorites/", views.favorite_projects, name="favorite_projects"),
     path("create-project/", views.create_project, name="create_project"),
-
     path("<int:project_id>/", views.project_detail, name="project_detail"),
     path("<int:project_id>/edit/", views.edit_project, name="edit_project"),
     path(

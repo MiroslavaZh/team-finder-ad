@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import User
-from .validators import validate_phone, validate_github_url
+from .validators import validate_github_url, validate_phone
 
 
 class RegisterForm(forms.ModelForm):

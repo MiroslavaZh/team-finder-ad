@@ -8,10 +8,9 @@ from .constants import (
     USER_PHONE_MAX_LENGTH,
     USER_SURNAME_MAX_LENGTH,
 )
-
 from .managers import UserManager
 from .services import generate_avatar
-from .validators import validate_phone, validate_github_url
+from .validators import validate_github_url, validate_phone
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -20,7 +19,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=USER_NAME_MAX_LENGTH)
     surname = models.CharField(max_length=USER_SURNAME_MAX_LENGTH)
 
-    avatar = models.ImageField(upload_to=AVATAR_UPLOAD_PATH, blank=True)
+    avatar = models.ImageField(
+        upload_to=AVATAR_UPLOAD_PATH,
+        blank=True,
+    )
 
     phone = models.CharField(
         max_length=USER_PHONE_MAX_LENGTH,
@@ -30,7 +32,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[validate_phone],
     )
 
-    github_url = models.URLField(blank=True, validators=[validate_github_url])
+    github_url = models.URLField(
+        blank=True,
+        validators=[validate_github_url],
+    )
 
     about = models.CharField(
         max_length=USER_ABOUT_MAX_LENGTH,
@@ -51,6 +56,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    def __str__(self):
+        return self.email
+
     def save(self, *args, **kwargs):
         creating = self.pk is None
 
@@ -59,6 +67,3 @@ class User(AbstractBaseUser, PermissionsMixin):
         if creating and not self.avatar:
             self.avatar = generate_avatar(self)
             super().save(update_fields=["avatar"])
-            
-    def __str__(self):
-        return self.email

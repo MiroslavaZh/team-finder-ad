@@ -3,11 +3,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .constants import (
-    JSON_STATUS_OK,
-    PROJECT_STATUS_CLOSED,
-    PROJECT_STATUS_OPEN,
-)
+from .constants import JSON_STATUS_OK, PROJECT_STATUS_CLOSED, PROJECT_STATUS_OPEN
 from .forms import ProjectForm
 from .models import Project
 from .services import paginate_queryset
@@ -31,9 +27,7 @@ def project_list(request):
 
 def project_detail(request, project_id):
     project = get_object_or_404(
-        Project.objects.select_related("owner").prefetch_related(
-            "participants"
-        ),
+        Project.objects.select_related("owner").prefetch_related("participants"),
         id=project_id,
     )
 
@@ -116,9 +110,7 @@ def toggle_participate(request, project_id):
         project = Project.objects.select_for_update().get(id=project_id)
         user = request.user
 
-        if is_participant := project.participants.filter(
-            pk=user.pk
-        ).exists():
+        if is_participant := project.participants.filter(pk=user.pk).exists():
             project.participants.remove(user)
         else:
             project.participants.add(user)
@@ -138,9 +130,7 @@ def toggle_participate(request, project_id):
 def toggle_favorite(request, project_id):
     project = get_object_or_404(Project, id=project_id)
 
-    if is_favorite := request.user.favorites.filter(
-        id=project.id
-    ).exists():
+    if is_favorite := request.user.favorites.filter(id=project.id).exists():
         request.user.favorites.remove(project)
     else:
         request.user.favorites.add(project)

@@ -1,9 +1,4 @@
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-    update_session_auth_hash,
-)
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import get_object_or_404, redirect, render
@@ -68,10 +63,6 @@ def user_profile(request, user_id):
     )
 
 
-def profile(request, user_id):
-    return user_profile(request, user_id)
-
-
 @login_required
 def edit_profile(request):
     form = ProfileForm(
@@ -111,19 +102,13 @@ def users_list(request):
             ).distinct()
 
         elif current_filter == "owners-of-participating-projects":
-            users = users.filter(
-                owned_projects__participants=request.user
-            ).distinct()
+            users = users.filter(owned_projects__participants=request.user).distinct()
 
         elif current_filter == "interested-in-my-projects":
-            users = users.filter(
-                favorites__owner=request.user
-            ).distinct()
+            users = users.filter(favorites__owner=request.user).distinct()
 
         elif current_filter == "participants-of-my-projects":
-            users = users.filter(
-                participated_projects__owner=request.user
-            ).distinct()
+            users = users.filter(participated_projects__owner=request.user).distinct()
 
     users_page = paginate_users(request, users)
 
