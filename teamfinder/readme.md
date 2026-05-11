@@ -42,6 +42,7 @@ cd teamfinder
 ```env
 DEBUG=True
 SECRET_KEY=your_secret_key
+ALLOWED_HOSTS=localhost,127.0.0.1
 
 DB_NAME=teamfinder
 DB_USER=postgres
@@ -91,64 +92,7 @@ http://localhost:8000
 
 ## Автор
 
-* Жиздюк Мирослава
+**Мирослава Жиздюк**
 
-## Для ревью
-
-# Создайте файл `.env` в корне проекта и заполните его:
-
-```env
-DEBUG=True
-SECRET_KEY=your_secret_key
-
-DB_NAME=teamfinder
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
-```
-
-# Перейти в корень проекта:
-
-```bash
-cd teamfinder
-```
-
-# Запустить проект:
-
-```bash
-docker compose up --build
-```
-
-# Применить миграции:
-
-```bash
-docker compose exec web python manage.py migrate
-```
-
-# Загрузить тестовые данные:
-
-```bash
-docker compose exec web python manage.py seed_data
-```
-
-После этого проект доступен по адресу:
-
-http://localhost:8000
-
-# Тестовые пользователи
-
-user1
-
-email: user1@test.com
-password: 12345678
-
-user2
-
-email: user2@test.com
-password: 12345678
-
-user3
-
-email: user3@test.com
-password: 12345678
+- GitHub: https://github.com/MiroslavaZh  
+- Email: miroslava1203@gmail.com
