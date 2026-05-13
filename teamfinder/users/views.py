@@ -7,7 +7,8 @@ from projects.models import Project
 
 from .forms import LoginForm, ProfileForm, RegisterForm
 from .models import User
-from .pagination import paginate_users
+from projects.services import paginate_queryset
+from .constants import USERS_PER_PAGE
 
 
 def register_view(request):
@@ -110,7 +111,11 @@ def users_list(request):
         elif current_filter == "participants-of-my-projects":
             users = users.filter(participated_projects__owner=request.user).distinct()
 
-    users_page = paginate_users(request, users)
+    users_page = paginate_queryset(
+        request=request,
+        queryset=users,
+        per_page=USERS_PER_PAGE,
+    )
 
     return render(
         request,
